@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RootWPSP | Panel de Control IoT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; font-weight: 600; color: var(--primary); }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-container {
+            grid-column: 1 / -1;
+            height: 400px;
+        }
+
+        #status-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><span id="status-dot"></span> RootWPSP Monitor</h1>
+        <form action="/logout" method="post">
+            <button type="submit" class="logout-btn">Cerrar Sesión</button>
+        </form>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="stat-label">Temperatura Actual</div>
+            <div id="temp-val" class="stat-value">--°C</div>
+            <div id="fecha-val" style="font-size: 0.7rem; color: #94a3b8;">Esperando datos...</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-label">Humedad Relativa</div>
+            <div id="hum-val" class="stat-value">--%</div>
+        </div>
+
+        <div class="card chart-container">
+            <div class="stat-label" style="margin-bottom: 15px;">Histórico de Mediciones</div>
+            <canvas id="grafico"></canvas>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

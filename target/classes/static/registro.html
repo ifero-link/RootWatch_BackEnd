@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | RootWPSP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: var(--card); padding: 40px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: var(--primary); margin-bottom: 10px; }
+        p { color: #64748b; font-size: 0.9rem; margin-bottom: 25px; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        button:hover { background-color: #1d4ed8; }
+        .footer-links { margin-top: 20px; font-size: 0.85rem; }
+        .footer-links a { color: var(--primary); text-decoration: none; }
+        #mensaje { margin-top: 15px; font-size: 0.85rem; padding: 10px; border-radius: 6px; display: none; }
+        .success { display: block !important; background: #dcfce7; color: #16a34a; }
+        .error { display: block !important; background: #fee2e2; color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Crear cuenta</h2>
+        <p>Regístrate para acceder al monitor IoT</p>
+        
+        <div id="mensaje"></div>
+
+        <form id="registroForm">
+            <input type="text" id="user" placeholder="Nombre de usuario" required>
+            <input type="password" id="pass" placeholder="Contraseña" required>
+            <button type="submit">Registrarse</button>
+        </form>
+
+        <div class="footer-links">
+            ¿Ya tienes cuenta? <a href="/login.html">Inicia sesión</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("registroForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const user = document.getElementById("user").value;
+            const pass = document.getElementById("pass").value;
+            const msgDiv = document.getElementById("mensaje");
+
+            try {
+                const response = await fetch("/api/usuarios/registro", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                const texto = await response.text();
+                msgDiv.innerText = texto;
+
+                if (response.ok && texto.includes("éxito")) {
+                    msgDiv.className = "success";
+                    setTimeout(() => window.location.href = "/login.html", 2000);
+                } else {
+                    msgDiv.className = "error";
+                }
+            } catch (err) {
+                msgDiv.innerText = "Error de conexión";
+                msgDiv.className = "error";
+            }
+        };
+    </script>
+</body>
+</html>
